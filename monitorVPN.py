@@ -2,7 +2,7 @@
 """
 Created on Wed Jul 10 17:21:04 2024
 
-@author: jlxuf
+@author: xujinliang 21265
 """
 import subprocess
 import chardet
@@ -81,18 +81,51 @@ def getProcessName():
     return processname
 
 # 配置日志
+def getCheckPeriod():
+    current_directory = os.getcwd()
 
+    json_filename = 'configVPN.json'
 
+    json_file_path = os.path.join(current_directory, json_filename)
+    
+    encoding = detect_encoding(json_file_path)
 
+    with open(json_file_path, 'r', encoding=encoding) as file:
+        data = json.load(file)
+    
+    checkperiodsecs = data.get('checkperiodsecs')
+    
+    return checkperiodsecs
+
+def getWifiname():
+    current_directory = os.getcwd()
+
+    json_filename = 'configVPN.json'
+
+    json_file_path = os.path.join(current_directory, json_filename)
+    
+    encoding = detect_encoding(json_file_path)
+
+    with open(json_file_path, 'r', encoding=encoding) as file:
+        data = json.load(file)
+    
+    wifiname = data.get('wifiname')
+    
+    return wifiname
 
 logger = logging.getLogger(__name__)
 logger.info("started")
     
-process_name = getProcessName()#"LetsPRO.exe"
+processnames = getProcessName().split(":")#"LetsPRO.exe"
+checkperiod = getCheckPeriod()
+wifiname = getWifiname()
+
+
 while True:
     logger.info("check again")
-    time.sleep(60)
-    isConnected = isNamedWifiConnected()
+    time.sleep(checkperiod)
+    isConnected = isNamedWifiConnected(wifiname)
     if isConnected:
-        kill_process_by_name(process_name)
+        for processname in processnames:
+            kill_process_by_name(processname)
     

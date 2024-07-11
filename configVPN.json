@@ -1,3 +1,5 @@
 {
-	"processname":"LetsPRO.exe"
+	"processname":"LetsPRO.exe:Shadowsocks.exe",
+	"checkperiodsecs":20,
+	"wifiname":"WNET"
 }
