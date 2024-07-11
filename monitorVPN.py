@@ -11,18 +11,7 @@ import time
 import os
 import json
 import logging
-
-log_directory = os.path.dirname(os.path.abspath(__file__))
-log_filename = 'killVPNlog.log'
-log_file_path = os.path.join(log_directory, log_filename)
-logging.basicConfig(
-    level=logging.INFO,  # 设置日志级别
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # 设置日志格式
-    handlers=[
-        logging.FileHandler(log_file_path),  # 将日志写入文件
-        #logging.StreamHandler()  # 同时在控制台输出日志
-    ]
-)
+import atexit
 
  
 def get_connected_wifi_name():
@@ -113,10 +102,31 @@ def getWifiname():
     
     return wifiname
 
-logger = logging.getLogger(__name__)
-logger.info("started")
-    
-processnames = getProcessName().split(":")#"LetsPRO.exe"
+def getLogger():
+    log_directory = os.path.dirname(os.path.abspath(__file__))
+    log_filename = 'killVPNlog.log'
+    log_file_path = os.path.join(log_directory, log_filename)
+    logging.basicConfig(
+        level=logging.INFO,  # 设置日志级别
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # 设置日志格式
+        handlers=[
+            logging.FileHandler(log_file_path),  # 将日志写入文件
+            #logging.StreamHandler()  # 同时在控制台输出日志
+        ]
+    )    
+
+    logger = logging.getLogger(__name__)
+    return logger
+
+
+import atexit
+
+logger = getLogger()    
+atexit.register(logging.shutdown)
+
+logger.info("Author: xujinliang@caict.ac.cn on 07/10/2024")
+
+processnames = getProcessName().split(":")
 checkperiod = getCheckPeriod()
 wifiname = getWifiname()
 
